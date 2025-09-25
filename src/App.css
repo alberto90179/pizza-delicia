@@ -1,38 +1,143 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.main-container {
+  background: url("https://i.pinimg.com/736x/46/23/3f/46233f969bbfe40b5a8f5fe321e63f37.jpg");
+  background-size: cover;
+  background-position: center; /* This is a new addition */
+  background-repeat: no-repeat; /* This is a new addition */
+  color: white;
+  padding: 35px;
+}
+
+.main-container,
+.combo-container,
+.comments-container,
+.sub-container {
+  height: 100vh;
+}
+.combo-container,
+.footer-container,
+.img-combo,
+.desc-combo,
+.user-comment .footer-card {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.img-combo,
+.desc-combo,
+.user-comment {
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Updated header styles */
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker, semi-transparent background */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.main-header .header-title {
+  font-size: 1.5rem;
+  margin-left: 20px; /* Adjust spacing */
+}
+
+.header-menu {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin-right: 20px; /* Adjust spacing */
+}
+
+.header-links {
+  text-decoration: none;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.sub-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 93vh;
+}
+
+.sub-container .main-title {
+  font-size: 3.5rem;
+  margin-bottom: 50px;
+}
+
+.sub-container .main-desc {
+  font-size: 2rem;
+}
+
+.card {
+  height: 50%;
+  display: flex;
+}
+
+.img-combo,
+.desc-combo {
+  width: 50vw;
+  height: 50vh;
+}
+
+.footer {
+  height: 22vh;
+}
+
+/* Updated button styles */
+.main-button {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white;
+  border: 1px solid white; /* White border */
+  border-radius: 5px;
+  width: 20vw;
+  height: 8vh;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.combo-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.desc-combo {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.user-comment {
+  height: 50vh;
+  width: 49vw;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.comments-container {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.footer-container {
+  justify-content: space-evenly;
+  padding-top: 10px;
+}
+
+.footer-card {
+  width: 30vw;
+  height: 22vh;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
