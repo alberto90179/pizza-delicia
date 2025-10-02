@@ -2,23 +2,28 @@
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
 }
+
+/* --- Estilos Base (Desktop First) --- */
 
 .main-container {
   background: url("https://i.pinimg.com/736x/46/23/3f/46233f969bbfe40b5a8f5fe321e63f37.jpg");
   background-size: cover;
-  background-position: center; /* This is a new addition */
-  background-repeat: no-repeat; /* This is a new addition */
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
-  padding: 35px;
+  padding: 0; /* Eliminamos el padding fijo aquí, se maneja en los elementos internos */
+  height: 100vh;
 }
 
 .main-container,
 .combo-container,
 .comments-container,
 .sub-container {
-  height: 100vh;
+  min-height: 100vh; /* Usamos min-height para que el contenido pueda crecer */
 }
+
 .combo-container,
 .footer-container,
 .img-combo,
@@ -36,29 +41,28 @@
   flex-direction: column;
 }
 
-/* Updated header styles */
+/* Header Styles */
 .main-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.7); /* Darker, semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  z-index: 10;
 }
 
 .main-header .header-title {
   font-size: 1.5rem;
-  margin-left: 20px; /* Adjust spacing */
 }
 
 .header-menu {
   display: flex;
   gap: 30px;
   list-style: none;
-  margin-right: 20px; /* Adjust spacing */
 }
 
 .header-links {
@@ -67,12 +71,14 @@
   font-size: 1.1rem;
 }
 
+/* Hero Section Styles */
 .sub-container {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 93vh;
+  height: 100%; /* Ocupa todo el main-container */
+  padding: 0 10px;
 }
 
 .sub-container .main-title {
@@ -84,32 +90,18 @@
   font-size: 2rem;
 }
 
+/* Combo Section Styles */
 .card {
-  height: 50%;
   display: flex;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 50vh; /* Asegura que la tarjeta tenga una altura mínima */
 }
 
 .img-combo,
 .desc-combo {
-  width: 50vw;
-  height: 50vh;
-}
-
-.footer {
-  height: 22vh;
-}
-
-/* Updated button styles */
-.main-button {
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  color: white;
-  border: 1px solid white; /* White border */
-  border-radius: 5px;
-  width: 20vw;
-  height: 8vh;
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-top: 20px;
+  width: 50%;
+  padding: 20px;
 }
 
 .combo-title {
@@ -121,23 +113,166 @@
   text-align: center;
 }
 
-.user-comment {
-  height: 50vh;
-  width: 49vw;
+/* Button Styles */
+.main-button {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 250px; /* Usamos un ancho fijo más seguro que 'vw' */
+  height: 60px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
+/* Comments Section Styles */
 .comments-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px 0;
+  min-height: 50vh;
+}
+
+.user-comment {
+  width: 23%; /* 4 comentarios por fila */
+  min-width: 200px; /* Ancho mínimo para evitar que se colapsen */
+  height: auto;
+  padding: 15px;
+  text-align: center;
+}
+
+/* Footer Styles */
+.footer {
+  min-height: 22vh;
+  background-color: #333; /* Fondo oscuro para el footer */
+  color: white;
+  padding: 20px 0;
 }
 
 .footer-container {
   justify-content: space-evenly;
   padding-top: 10px;
+  gap: 20px; /* Espacio entre columnas */
 }
 
 .footer-card {
-  width: 30vw;
-  height: 22vh;
+  width: 30%; /* Ancho de la columna en desktop */
+  min-width: 250px;
+  height: auto;
   align-items: center;
+  padding: 10px;
+}
+
+/* --- Media Query para Tabletas (Pantallas <= 768px) --- */
+@media (max-width: 768px) {
+  
+  /* Header adjustments */
+  .main-header {
+    padding: 10px;
+  }
+  .main-header .header-title {
+    font-size: 1.3rem;
+  }
+  .header-menu {
+    gap: 15px;
+  }
+  .header-links {
+    font-size: 1rem;
+  }
+
+  /* Hero Section adjustments */
+  .sub-container .main-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+  .sub-container .main-desc {
+    font-size: 1.5rem;
+  }
+  .main-button {
+    width: 200px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  /* Combo Section - Stack vertically */
+  .card {
+    flex-direction: column; /* Apila imagen y descripción */
+    min-height: auto;
+  }
+  .card:nth-child(even) {
+    flex-direction: column; /* Asegura el apilamiento para el combo invertido */
+  }
+
+  .img-combo,
+  .desc-combo {
+    width: 100%; /* Ocupan todo el ancho */
+    padding: 10px 0;
+    min-height: auto;
+  }
+  .combo-title {
+    font-size: 1.8rem;
+  }
+
+  /* Comments Section */
+  .user-comment {
+    width: 45%; /* 2 comentarios por fila */
+    margin-bottom: 15px;
+  }
+
+  /* Footer Section */
+  .footer-container {
+    flex-direction: column; /* Las columnas del footer se apilan */
+    align-items: center;
+    text-align: center;
+  }
+  .footer-card {
+    width: 90%; /* Ocupan casi todo el ancho */
+    margin-bottom: 15px;
+    min-width: unset;
+  }
+}
+
+/* --- Media Query para Móviles (Pantallas <= 480px) --- */
+@media (max-width: 480px) {
+  
+  /* Header - Puede requerir un menú de hamburguesa si hay muchos ítems */
+  .main-header {
+    flex-direction: column; /* Apila el título y el menú */
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px 10px;
+  }
+  .header-menu {
+    width: 100%;
+    justify-content: space-around;
+    margin-right: 0;
+  }
+
+  /* Hero Section */
+  .sub-container .main-title {
+    font-size: 2rem;
+  }
+  .sub-container .main-desc {
+    font-size: 1.2rem;
+  }
+
+  /* Button */
+  .main-button {
+    width: 80%; /* Más ancho para móviles */
+    max-width: 200px;
+    height: 45px;
+  }
+
+  /* Comments Section */
+  .user-comment {
+    width: 80%; /* 1 comentario por fila */
+  }
+
+  /* Footer Section */
+  .footer-card {
+    width: 100%;
+    margin: 10px 0;
+  }
 }

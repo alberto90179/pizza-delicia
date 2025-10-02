@@ -6,7 +6,7 @@ function Footer() {
       <hr />
       <footer className="footer-container">
         <div className="footer-card">
-          <p>Siguenos en redes sociales</p>
+          <p>Síguenos en redes sociales</p>
           <br /><br />
           <img src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000" alt="facebook" /><img src="https://img.icons8.com/?size=100&id=nj0Uj45LGUYh&format=png&color=000000" alt="instagram" /><img
             src="https://img.icons8.com/?size=100&id=p4rU35mvmXMQ&format=png&color=000000"
@@ -20,7 +20,18 @@ function Footer() {
             <br />&copy; Fernando Córdova Mendoza
           </p>
         </div>
-        <div className="footer-card"><p>Ubícanos en:</p></div>
+        <div className="footer-card">
+          <p>
+            Ubícanos en:
+            <br />
+            <br />
+            **Av. Principal No. 123**
+            <br />
+            Colonia Centro, Zapopan, Jalisco, México
+            <br />
+            Tel: **3336058030**
+          </p>
+        </div>
       </footer>
     </div>
   );
