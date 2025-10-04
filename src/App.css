@@ -1,278 +1,492 @@
+:root { 
+  --primary-color: #e4002b; /* Rojo para botones y acentos */
+  --text-color: #333;
+  --bg-color: #f8f8f8;
+  --link-color: #555;
+  --border-color: #e0e0e0;
+}
+
 * {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-/* --- Estilos Base (Desktop First) --- */
-
-.main-container {
-  background: url("https://i.pinimg.com/736x/46/23/3f/46233f969bbfe40b5a8f5fe321e63f37.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-  padding: 0; /* Eliminamos el padding fijo aquí, se maneja en los elementos internos */
-  height: 100vh;
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
-.main-container,
-.combo-container,
-.comments-container,
-.sub-container {
-  min-height: 100vh; /* Usamos min-height para que el contenido pueda crecer */
+.main-content-wrapper {
+  min-height: 80vh; 
 }
 
-.combo-container,
-.footer-container,
-.img-combo,
-.desc-combo,
-.user-comment .footer-card {
-  display: flex;
-  flex-wrap: wrap;
+.page-padding {
+  padding: 30px 5% 40px 5%; 
 }
 
-.img-combo,
-.desc-combo,
-.user-comment {
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-/* Header Styles */
+/* --- HEADER --- */
 .main-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.7);
-  position: absolute;
+  align-items: center;
+  padding: 15px 5%;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+  z-index: 1000;
 }
 
-.main-header .header-title {
-  font-size: 1.5rem;
+.header-title a {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
 }
 
 .header-menu {
   display: flex;
-  gap: 30px;
   list-style: none;
+  gap: 25px;
+  align-items: center;
 }
 
 .header-links {
-  text-decoration: none;
   color: white;
-  font-size: 1.1rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  font-size: 1rem;
 }
 
-/* Hero Section Styles */
-.sub-container {
+.header-links:hover {
+  color: var(--primary-color);
+}
+
+.cart-icon {
+  font-size: 1.5rem;
+  color: white;
+}
+
+/* --- BOTONES --- */
+.btn {
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  text-transform: uppercase;
+  font-size: 1rem;
+  border: none;
+}
+
+.btn-primary, .btn-add-cart, .btn-pay-order, .btn-hero-menu, .btn-secondary {
+  background-color: black;
+  color: white;
+}
+
+.btn-primary:hover, .btn-pay-order:hover, .btn-add-cart:hover, .btn-secondary:hover, .btn-hero-menu:hover {
+  background-color: var(--primary-color);
+}
+
+.btn-hero-menu {
+  border: 1px solid white;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* --- HOME PAGE STYLES --- */
+.home-page-container {
+  width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+  background: url("https://i.pinimg.com/736x/46/23/3f/46233f969bbfe40b5a8f5fe321e63f37.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 85vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100%; /* Ocupa todo el main-container */
-  padding: 0 10px;
+  color: white;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
 }
 
-.sub-container .main-title {
-  font-size: 3.5rem;
-  margin-bottom: 50px;
+.hero-content h1 {
+  font-size: 4rem;
+  margin-bottom: 10px;
 }
 
-.sub-container .main-desc {
-  font-size: 2rem;
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
 }
 
-/* Combo Section Styles */
-.card {
+/* Promotions Section */
+.promotions-section {
+  padding-top: 50px;
+  padding-bottom: 50px;
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  gap: 60px;
   max-width: 1200px;
-  min-height: 50vh; /* Asegura que la tarjeta tenga una altura mínima */
+  margin: 0 auto;
 }
 
-.img-combo,
-.desc-combo {
-  width: 50%;
-  padding: 20px;
+.promo-item {
+  display: flex;
+  align-items: center;
+  gap: 50px;
 }
 
-.combo-title {
+.promo-item.promo-second {
+  flex-direction: row-reverse;
+}
+
+.promo-description {
+  flex: 1;
+  max-width: 450px;
+  text-align: left;
+}
+
+.promo-image {
+  flex: 1;
+  max-width: 500px;
+}
+
+.promo-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.promo-description h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.promo-description p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.promo-description .btn {
+  background-color: black;
+  color: white;
+  width: 150px;
+  padding: 10px 20px;
+}
+
+/* Comments Section */
+.comments-section {
+  padding: 30px 5%;
+  max-width: 1200px;
+  margin: 0 auto 50px auto;
+}
+
+.comments-section h2 {
   font-size: 2rem;
   font-weight: bold;
-}
-
-.desc-combo {
+  margin-bottom: 30px;
+  color: #000;
   text-align: center;
 }
 
-/* Button Styles */
-.main-button {
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: 1px solid white;
+.comments-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 80px;
+}
+
+.comment-card {
+  background: white;
+  padding: 20px;
   border-radius: 5px;
-  width: 250px; /* Usamos un ancho fijo más seguro que 'vw' */
-  height: 60px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.comment-icon {
   font-size: 1.5rem;
-  cursor: pointer;
-  margin-top: 20px;
+  margin-bottom: 10px;
+  display: block;
+  color: #000;
 }
 
-/* Comments Section Styles */
-.comments-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding: 20px 0;
-  min-height: 50vh;
+.comment-card h4 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #000;
 }
 
-.user-comment {
-  width: 23%; /* 4 comentarios por fila */
-  min-width: 200px; /* Ancho mínimo para evitar que se colapsen */
-  height: auto;
-  padding: 15px;
-  text-align: center;
+.comment-card p {
+  color: #777;
+  font-style: normal;
+  font-size: 0.95rem;
 }
 
-/* Footer Styles */
-.footer {
-  min-height: 22vh;
-  background-color: #333; /* Fondo oscuro para el footer */
-  color: white;
-  padding: 20px 0;
-}
-
+/* --- FOOTER --- */
 .footer-container {
-  justify-content: space-evenly;
-  padding-top: 10px;
-  gap: 20px; /* Espacio entre columnas */
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 5%;
+  background-color: white;
+  color: var(--link-color);
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
 .footer-card {
-  width: 30%; /* Ancho de la columna en desktop */
-  min-width: 250px;
-  height: auto;
+  min-width: 200px;
+  margin: 10px 0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 10px;
+  text-align: center;
 }
 
-/* --- Media Query para Tabletas (Pantallas <= 768px) --- */
-@media (max-width: 768px) {
-  
-  /* Header adjustments */
-  .main-header {
-    padding: 10px;
-  }
-  .main-header .header-title {
-    font-size: 1.3rem;
-  }
-  .header-menu {
-    gap: 15px;
-  }
-  .header-links {
-    font-size: 1rem;
+.footer-social p, .footer-location p {
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  text-decoration: none;
+  line-height: 0;
+}
+
+.social-icon-img {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  transition: transform 0.2s ease-in-out;
+}
+
+.social-icon-img:hover {
+  transform: translateY(-3px);
+}
+
+/* ================================================= */
+/* === ABOUT PAGE STYLES === */
+/* ================================================= */
+
+.about-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Conócenos Section */
+.conocenos-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 60px 5%;
+  background-color: #fff;
+}
+
+.conocenos-text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.conocenos-text h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.conocenos-text .large-text {
+  color: #777;
+  font-weight: 500;
+  margin-bottom: 25px;
+}
+
+.conocenos-text p {
+  color: #333;
+  line-height: 1.7;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.conocenos-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.conocenos-image img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* Contact Form */
+.contact-section {
+  padding: 40px 5%;
+  background-color: #fff;
+  text-align: left;
+}
+
+.contact-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+.contact-form {
+  max-width: 600px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.contact-form textarea {
+  resize: none;
+  height: 120px;
+}
+
+.form-submit-btn {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  font-size: 1rem;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-submit-btn:hover {
+  background-color: #e4002b;
+}
+
+/* Events Section */
+.events-section {
+  padding: 30px 5%;
+  background-color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+}
+
+/* =========================== */
+/* === RESPONSIVE DESIGN === */
+/* =========================== */
+@media (max-width: 992px) {
+  .conocenos-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
   }
 
-  /* Hero Section adjustments */
-  .sub-container .main-title {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-  }
-  .sub-container .main-desc {
-    font-size: 1.5rem;
-  }
-  .main-button {
-    width: 200px;
-    height: 50px;
-    font-size: 1.2rem;
+  .conocenos-image {
+    width: 100%;
+    max-width: 400px;
   }
 
-  /* Combo Section - Stack vertically */
-  .card {
-    flex-direction: column; /* Apila imagen y descripción */
-    min-height: auto;
-  }
-  .card:nth-child(even) {
-    flex-direction: column; /* Asegura el apilamiento para el combo invertido */
-  }
-
-  .img-combo,
-  .desc-combo {
-    width: 100%; /* Ocupan todo el ancho */
-    padding: 10px 0;
-    min-height: auto;
-  }
-  .combo-title {
-    font-size: 1.8rem;
-  }
-
-  /* Comments Section */
-  .user-comment {
-    width: 45%; /* 2 comentarios por fila */
-    margin-bottom: 15px;
-  }
-
-  /* Footer Section */
   .footer-container {
-    flex-direction: column; /* Las columnas del footer se apilan */
+    flex-direction: column;
     align-items: center;
     text-align: center;
   }
-  .footer-card {
-    width: 90%; /* Ocupan casi todo el ancho */
-    margin-bottom: 15px;
-    min-width: unset;
+
+  .footer-location {
+    text-align: center;
   }
 }
 
-/* --- Media Query para Móviles (Pantallas <= 480px) --- */
-@media (max-width: 480px) {
-  
-  /* Header - Puede requerir un menú de hamburguesa si hay muchos ítems */
-  .main-header {
-    flex-direction: column; /* Apila el título y el menú */
-    align-items: flex-start;
-    gap: 10px;
-    padding: 15px 10px;
+@media (max-width: 768px) {
+  .promo-item, .promo-item.promo-second {
+    flex-direction: column;
+    text-align: center;
   }
+  
+  .comments-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+  
+  .promo-description {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-header {
+    flex-wrap: wrap;
+    padding: 10px 5%;
+  }
+
   .header-menu {
     width: 100%;
     justify-content: space-around;
-    margin-right: 0;
+    margin-top: 10px;
   }
 
-  /* Hero Section */
-  .sub-container .main-title {
+  .conocenos-text h1 {
+    font-size: 2.3rem;
+  }
+
+  .contact-form {
+    width: 100%;
+  }
+
+  .form-submit-btn {
+    width: 100%;
+  }
+
+  .footer-container {
+    text-align: center;
+  }
+  
+  .hero-section {
+    height: 60vh;
+  }
+  
+  .hero-content h1 {
     font-size: 2rem;
   }
-  .sub-container .main-desc {
-    font-size: 1.2rem;
-  }
-
-  /* Button */
-  .main-button {
-    width: 80%; /* Más ancho para móviles */
-    max-width: 200px;
-    height: 45px;
-  }
-
-  /* Comments Section */
-  .user-comment {
-    width: 80%; /* 1 comentario por fila */
-  }
-
-  /* Footer Section */
-  .footer-card {
-    width: 100%;
-    margin: 10px 0;
+  
+  .hero-content p {
+    font-size: 1rem;
   }
 }
