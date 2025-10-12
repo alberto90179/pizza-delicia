@@ -1,4 +1,4 @@
-:root { 
+:root {
   --primary-color: #e4002b; /* Rojo para botones y acentos */
   --text-color: #333;
   --bg-color: #f8f8f8;
@@ -19,11 +19,11 @@ body {
 }
 
 .main-content-wrapper {
-  min-height: 80vh; 
+  min-height: 80vh;
 }
 
 .page-padding {
-  padding: 30px 5% 40px 5%; 
+  padding: 30px 5% 40px 5%;
 }
 
 /* --- HEADER --- */
@@ -83,12 +83,20 @@ body {
   border: none;
 }
 
-.btn-primary, .btn-add-cart, .btn-pay-order, .btn-hero-menu, .btn-secondary {
+.btn-primary,
+.btn-add-cart,
+.btn-pay-order,
+.btn-hero-menu,
+.btn-secondary {
   background-color: black;
   color: white;
 }
 
-.btn-primary:hover, .btn-pay-order:hover, .btn-add-cart:hover, .btn-secondary:hover, .btn-hero-menu:hover {
+.btn-primary:hover,
+.btn-pay-order:hover,
+.btn-add-cart:hover,
+.btn-secondary:hover,
+.btn-hero-menu:hover {
   background-color: var(--primary-color);
 }
 
@@ -211,7 +219,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
@@ -371,7 +379,8 @@ body {
   text-align: center;
 }
 
-.footer-social p, .footer-location p {
+.footer-social p,
+.footer-location p {
   font-weight: bold;
   color: var(--text-color);
   margin-bottom: 10px;
@@ -453,7 +462,7 @@ body {
   max-width: 450px;
   border-radius: 15px;
   object-fit: cover;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Contact Form */
@@ -541,24 +550,25 @@ body {
 }
 
 @media (max-width: 768px) {
-  .promo-item, .promo-item.promo-second {
+  .promo-item,
+  .promo-item.promo-second {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .comments-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .hero-content h1 {
     font-size: 2.5rem;
   }
-  
+
   .hero-content p {
     font-size: 1.2rem;
   }
-  
+
   .promo-description {
     text-align: center;
   }
@@ -591,15 +601,15 @@ body {
   .footer-container {
     text-align: center;
   }
-  
+
   .hero-section {
     height: 60vh;
   }
-  
+
   .hero-content h1 {
     font-size: 2rem;
   }
-  
+
   .hero-content p {
     font-size: 1rem;
   }

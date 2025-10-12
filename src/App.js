@@ -1,17 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import "bootstrap/dist/js/bootstrap.bundle.min"; // Import Bootstrap JS
+
 // Importaciones desde la nueva ubicación modular
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 
 // Importa las páginas desde la carpeta 'pages'
-import HomePage from './pages/HomePage';
-import MenuPage from './pages/MenuPage';
-import AboutPage from './pages/AboutPage';
-import ProductDetailPage from './pages/ProductDetailPage';
-import CartPage from './pages/CartPage';
+import HomePage from "./pages/HomePage";
+import MenuPage from "./pages/MenuPage";
+import AboutPage from "./pages/AboutPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 
-import './App.css'; // Estilos globales
+import "./App.css"; // Estilos globales
 
 function App() {
   return (
@@ -25,9 +28,14 @@ function App() {
           <Route path="/conocenos" element={<AboutPage />} />
           <Route path="/producto/:id" element={<ProductDetailPage />} />
           <Route path="/carrito" element={<CartPage />} />
-          
+
           {/* 404 */}
-          <Route path="*" element={<h1 className="page-padding">404: Página no encontrada</h1>} />
+          <Route
+            path="*"
+            element={
+              <h1 className="page-padding">404: Página no encontrada</h1>
+            }
+          />
         </Routes>
       </main>
       <Footer />
