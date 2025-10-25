@@ -38,6 +38,8 @@ function CartPage() {
         }
       );
       alert("Pedido enviado", response.data);
+      localStorage.clear();
+      setCartItems([]);
     } catch (e) {
       alert(e);
     }
@@ -72,14 +74,14 @@ function CartPage() {
         if (!product) return null;
 
         // Determinar el precio unitario
-        const itemPriceUnit = item.size
-          ? product.sizes[item.size]
-          : product.price;
+        const itemPriceUnit = item.prices
+          ? item.prices[item].price
+          : item.price;
 
         return {
           ...item,
-          title: product.title,
-          image: product.image,
+          title: item.pizza,
+          image: item.image,
           price: itemPriceUnit,
           subtotal: itemPriceUnit * item.quantity,
         };
@@ -169,7 +171,7 @@ function CartPage() {
                   {item.size && `${item.size.toUpperCase()}, `}
                   CANTIDAD: {item.quantity}
                 </p>
-                <p className="item-price-display">${item.price} MXN</p>
+                <p className="item-price-display">${item.subtotal} MXN</p>
 
                 {/* Controles de Cantidad y Eliminación */}
                 <div className="cart-controls">

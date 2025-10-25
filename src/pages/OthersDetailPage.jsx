@@ -1,56 +1,77 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SuggestionCard from "../components/common/SuggestionCard";
-import { findProductById, menuData } from "../components/data/menuData";
+import { menuData } from "../components/data/menuData";
 import axios from "axios";
 
-function ProductDetailPage() {
+function OthersDetailPage() {
   // 1. Obtener ID y producto (Lógica previa a los hooks)
   const { id } = useParams(); //recibe el id desde la url
   const { cat } = useParams(); // recibe la categoria del producto
-  const product = findProductById(id);
 
   //request al servidor por producto carga los estados iniciales solo de pizzas
-  const [pizza, setPizza] = useState({});
+  const [product, setProduct] = useState({});
 
   //evalua la categoria e inicia el estado de la variable correspondiente
   useEffect(() => {
-    getPizza();
+    switch (cat) {
+      case "drink":
+        getDrink();
+        break;
+      case "dessert":
+        getDessert();
+        break;
+      case "extra":
+        getExtra();
+        break;
+    }
   }, []);
 
-  const getPizza = async () => {
+  const getDrink = async () => {
     const res = await axios.get(
-      `https://service-pizzadelicia-v1.gulliferwd.com/api/pizza/${id}`
+      `https://service-pizzadelicia-v1.gulliferwd.com/api/drink/${id}`
     );
-    setPizza(res.data);
+    setProduct(res.data);
+  };
+
+  const getDessert = async () => {
+    const res = await axios.get(
+      `https://service-pizzadelicia-v1.gulliferwd.com/api/dessert/${id}`
+    );
+    setProduct(res.data);
+  };
+
+  const getExtra = async () => {
+    const res = await axios.get(
+      `https://service-pizzadelicia-v1.gulliferwd.com/api/extra/${id}`
+    );
+    setProduct(res.data);
   };
 
   // 2. Cálculo del estado inicial (Debe hacerse antes de llamar a useState)
   // Usamos el operador ?. (optional chaining) para evitar errores si 'product' es null.
-  const defaultSize = pizza?.prices ? pizza.prices[0] : null;
 
   // 3. ✅ HOOKS LLAMADOS PRIMERO (Esta es la sección correcta)
-  const [selectedSize, setSelectedSize] = useState(defaultSize);
   const [quantity, setQuantity] = useState(1);
 
   // 4. RETORNO CONDICIONAL (Debe ir DESPUÉS de todos los hooks)
-  if (!pizza) {
+  if (!product) {
     return <h1 className="page-padding">Error 404: Producto no encontrado.</h1>;
   }
 
   // 5. LÓGICA DE PRECIOS Y CARRITO (Solo se ejecuta si el producto existe)
-  let currentPrice = 0;
-  if (selectedSize != null) {
-    currentPrice = selectedSize.price;
+  let price = 0;
+  if (product.price != null) {
+    price = product.price;
   } else {
-    currentPrice = pizza.price;
+    price = "";
   }
 
   const saveToLocalStorage = (item) => {
     const cart = JSON.parse(localStorage.getItem("pizzaDeliciaCart") || "[]");
 
     const existingIndex = cart.findIndex(
-      (i) => i.productId === item.productId && i.size === item.size
+      (i) => i.productName === item.productName
     );
 
     if (existingIndex > -1) {
@@ -63,18 +84,13 @@ function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    if (pizza.prices && !selectedSize) {
-      alert("Por favor, selecciona un tamaño antes de agregar al carrito.");
-      return;
-    }
-
-    const itemDetails = {
-      productId: pizza.id,
-      productName: pizza.pizza,
-      size: selectedSize.size,
+    let itemDetails = {
+      productId: product.id,
+      productName: product.name,
+      size: "n/a",
       quantity: quantity,
-      price: selectedSize.price,
-      image: pizza.image,
+      price: product.price,
+      image: product.image_link,
     };
 
     saveToLocalStorage(itemDetails);
@@ -104,36 +120,18 @@ function ProductDetailPage() {
         <div className="product-detail-image">
           <img
             className="rounded"
-            src={pizza.image ? pizza.image : pizza.image_link}
-            alt={pizza.pizza}
+            src={product.image_link}
+            alt={product.name}
             width="473"
             height="275"
           />
         </div>
 
         <div className="product-detail-info">
-          <h1>{pizza.pizza}</h1>
-          <p className="product-description fs-6">{pizza.description}</p>
+          <h1>{product.name}</h1>
+          <p className="product-description fs-6">{product.description}</p>
 
-          <p className="product-price-display fs-5">${currentPrice} MXN</p>
-
-          {/* Opciones de Tamaño */}
-          {pizza.prices && (
-            <div className="size-options">
-              {pizza.prices.map((sizeName) => (
-                <button
-                  key={sizeName}
-                  className={`size-btn ${
-                    selectedSize === sizeName ? "active" : ""
-                  } btn btn-add-cart`}
-                  onClick={() => setSelectedSize(sizeName)}
-                  style={{ margin: "5px" }}
-                >
-                  {sizeName.size}
-                </button>
-              ))}
-            </div>
-          )}
+          <p className="product-price-display fs-5">${price} MXN</p>
 
           {/* Input de Cantidad */}
           <div
@@ -176,4 +174,4 @@ function ProductDetailPage() {
   );
 }
 
-export default ProductDetailPage;
+export default OthersDetailPage;

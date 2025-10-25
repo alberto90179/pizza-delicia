@@ -13,6 +13,7 @@ import MenuPage from "./pages/MenuPage";
 import AboutPage from "./pages/AboutPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
+import OthersDetailPage from "./pages/OthersDetailPage";
 
 import "./App.css"; // Estilos globales
 
@@ -26,7 +27,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/conocenos" element={<AboutPage />} />
-          <Route path="/producto/:id" element={<ProductDetailPage />} />
+          <Route path="/producto/pizza/:id" element={<ProductDetailPage />} />
+          <Route path="/producto/:cat/:id" element={<OthersDetailPage />} />
           <Route path="/carrito" element={<CartPage />} />
 
           {/* 404 */}

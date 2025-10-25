@@ -1,8 +1,13 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function ProductCard({ product }) {
-  const { id, name, description, image_link, prices, size, price } = product;
+function ProductCard({ product, category }) {
+  const { id, name, description, image, prices, size, price } = product;
+  const [cat, setCat] = useState("");
+
+  useEffect(() => {
+    setCat(category);
+  });
 
   // 💡 Lógica para determinar el precio a mostrar en la tarjeta
   let displayPrice;
@@ -17,7 +22,7 @@ function ProductCard({ product }) {
 
   return (
     <div className="product-card">
-      <Link to={`/producto/${product.id}`} className="product-link">
+      <Link to={`/producto/${cat}/${product.id}`} className="product-link">
         <div className="product-card-image">
           <img src={product.image_link} alt={name} />
         </div>
