@@ -19,6 +19,32 @@ function CartPage() {
   const [municipioInput, setMunicipioInput] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
 
+  //funcion para obtener la fecha
+
+  const getFecha = () => {
+    const currentDate = new Date();
+    let day = currentDate.getDate();
+    let month = currentDate.getMonth() + 1;
+    let year = currentDate.getFullYear();
+
+    if (day < 10) {
+      day = "0" + day;
+    }
+    if (month < 10) {
+      month = "0" + month;
+    }
+
+    const date = `${day}/${month}/${year}`;
+    return date;
+  };
+
+  const getHora = () => {
+    const currentTime = new Date();
+    let hour = currentTime.getHours();
+    let min = currentTime.getMinutes();
+    const time = `${hour}:${min}`;
+    return time;
+  };
   //Funcion para insertar en la base de datos un pedido
 
   const postPedido = async () => {
@@ -35,6 +61,8 @@ function CartPage() {
           metodoPago: metodoPago,
           productos: cartItems,
           total: totalMx,
+          date: getFecha(),
+          time: getHora(),
         }
       );
       alert("Pedido enviado", response.data);
