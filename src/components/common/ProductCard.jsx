@@ -1,47 +1,40 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-
-const ProductCard = ({ id, name, description, image, price, category }) => {
+function ProductCard({ product, category }) {
+  const { id, name, description, image, prices, size, price } = product;
   const [cat, setCat] = useState("");
 
-  // ✅ Solo se actualiza cuando cambia la categoría
   useEffect(() => {
     setCat(category);
-  }, [category]);
+  });
+
+  // 💡 Lógica para determinar el precio a mostrar en la tarjeta
+  let displayPrice;
+  if (prices) {
+    // Si es una pizza, toma el precio más bajo (el valor del primer tamaño, que asumimos es Chica)
+    const firstSizePrice = Object.values(prices)[0];
+    displayPrice = `Desde $${firstSizePrice.price} MXN`;
+  } else {
+    // Si es otro producto (postre, bebida), usa el precio simple
+    displayPrice = `$${price} MXN`;
+  }
 
   return (
-    <div className="card shadow-sm border-0 mb-3 product-card">
-      <img
-        src={image || "https://via.placeholder.com/250x180?text=Pizza+Delicia"}
-        className="card-img-top"
-        alt={name}
-        style={{ height: "180px", objectFit: "cover" }}
-      />
-      <div className="card-body">
-        <h5 className="card-title text-primary">{name}</h5>
-        <p className="card-text text-muted">{description}</p>
-        <p className="fw-bold mb-1">Categoría: <span className="text-secondary">{cat}</span></p>
-        <p className="fw-bold">💲{price}</p>
-
-        {/* Botones simulados para CRUD */}
-        <div className="d-flex justify-content-between mt-3">
-          <button className="btn btn-sm btn-outline-success">Editar</button>
-          <button className="btn btn-sm btn-outline-danger">Eliminar</button>
+    <div className="product-card">
+      <Link to={`/producto/${cat}/${product.id}`} className="product-link">
+        <div className="product-card-image">
+          <img src={product.image_link} alt={name} />
         </div>
-      </div>
+        <div className="product-card-content">
+          <h3 className="product-card-title">{product.name}</h3>
+          <p className="product-card-description">{product.description}</p>
+          <p className="product-card-price">{displayPrice}</p>{" "}
+          {/* Usa el precio calculado */}
+        </div>
+      </Link>
     </div>
   );
-};
-
-// Validación de props
-ProductCard.propTypes = {
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  image: PropTypes.string,
-  price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  category: PropTypes.string.isRequired,
-};
+}
 
 export default ProductCard;
