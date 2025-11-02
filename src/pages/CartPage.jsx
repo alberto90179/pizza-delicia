@@ -56,22 +56,20 @@ function CartPage() {
     }
 
     try {
-      const response = await axios.post(
-        "https://pizza-delicia-api-pedidos.vercel.app/pedidos",
-        {
-          name: nameInput,
-          calle: calleInput,
-          colonia: coloniaInput,
-          zipCode: cpInput,
-          municipio: municipioInput,
-          phone: phoneInput,
-          metodoPago: metodoPago,
-          productos: cartItems,
-          total: totalMx,
-          date: getFecha(),
-          time: getHora(),
-        }
-      );
+      await axios.post("https://pizza-delicia-api-pedidos.vercel.app/pedidos", {
+        name: nameInput,
+        calle: calleInput,
+        colonia: coloniaInput,
+        zipCode: cpInput,
+        municipio: municipioInput,
+        phone: phoneInput,
+        metodoPago: metodoPago,
+        productos: cartItems,
+        total: totalMx,
+        date: getFecha(),
+        time: getHora(),
+      });
+
       alert("Pedido enviado correctamente.");
       localStorage.clear();
       setCartItems([]);
