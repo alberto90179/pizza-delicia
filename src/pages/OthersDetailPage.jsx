@@ -5,73 +5,58 @@ import { menuData } from "../components/data/menuData";
 import axios from "axios";
 
 function OthersDetailPage() {
-  // 1. Obtener ID y producto (Lógica previa a los hooks)
-  const { id } = useParams(); //recibe el id desde la url
-  const { cat } = useParams(); // recibe la categoria del producto
-
-  //request al servidor por producto carga los estados iniciales solo de pizzas
+  // 1. Obtener parámetros
+  const { id, cat } = useParams();
+  
+  // 2. Estados (hooks primero)
   const [product, setProduct] = useState({});
-
-  //evalua la categoria e inicia el estado de la variable correspondiente
-  useEffect(() => {
-    switch (cat) {
-      case "drink":
-        getDrink();
-        break;
-      case "dessert":
-        getDessert();
-        break;
-      case "extra":
-        getExtra();
-        break;
-    }
-  }, []);
-
-  const getDrink = async () => {
-    const res = await axios.get(
-      `https://service-pizzadelicia-v1.gulliferwd.com/api/drink/${id}`
-    );
-    setProduct(res.data);
-  };
-
-  const getDessert = async () => {
-    const res = await axios.get(
-      `https://service-pizzadelicia-v1.gulliferwd.com/api/dessert/${id}`
-    );
-    setProduct(res.data);
-  };
-
-  const getExtra = async () => {
-    const res = await axios.get(
-      `https://service-pizzadelicia-v1.gulliferwd.com/api/extra/${id}`
-    );
-    setProduct(res.data);
-  };
-
-  // 2. Cálculo del estado inicial (Debe hacerse antes de llamar a useState)
-  // Usamos el operador ?. (optional chaining) para evitar errores si 'product' es null.
-
-  // 3. ✅ HOOKS LLAMADOS PRIMERO (Esta es la sección correcta)
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // 4. RETORNO CONDICIONAL (Debe ir DESPUÉS de todos los hooks)
-  if (!product) {
-    return <h1 className="page-padding">Error 404: Producto no encontrado.</h1>;
-  }
+  // 3. Efecto para cargar el producto
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        let endpoint = "";
+        switch (cat) {
+          case "drink":
+            endpoint = `https://service-pizzadelicia-v1.gulliferwd.com/api/drink/${id}`;
+            break;
+          case "dessert":
+            endpoint = `https://service-pizzadelicia-v1.gulliferwd.com/api/dessert/${id}`;
+            break;
+          case "extra":
+            endpoint = `https://service-pizzadelicia-v1.gulliferwd.com/api/extra/${id}`;
+            break;
+          default:
+            throw new Error("Categoría no válida");
+        }
 
-  // 5. LÓGICA DE PRECIOS Y CARRITO (Solo se ejecuta si el producto existe)
-  let price = 0;
-  if (product.price != null) {
-    price = product.price;
-  } else {
-    price = "";
-  }
+        const res = await axios.get(endpoint);
+        setProduct(res.data);
+      } catch (err) {
+        console.error("Error loading product:", err);
+        setError("Error al cargar el producto");
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    if (id && cat) {
+      fetchProduct();
+    }
+  }, [id, cat]);
+
+  // 4. Función para guardar en localStorage
   const saveToLocalStorage = (item) => {
     const cart = JSON.parse(localStorage.getItem("pizzaDeliciaCart") || "[]");
 
     const existingIndex = cart.findIndex(
-      (i) => i.productName === item.productName
+      (i) => i.productId === item.productId && i.size === item.size
     );
 
     if (existingIndex > -1) {
@@ -83,33 +68,52 @@ function OthersDetailPage() {
     localStorage.setItem("pizzaDeliciaCart", JSON.stringify(cart));
   };
 
+  // 5. Manejar agregar al carrito
   const handleAddToCart = () => {
-    let itemDetails = {
+    if (!product.id) {
+      alert("Producto no disponible");
+      return;
+    }
+
+    const itemDetails = {
       productId: product.id,
-      productName: product.name,
-      size: "n/a",
+      productName: product.name || product.title,
+      size: "Unidad",
       quantity: quantity,
-      price: product.price,
-      image: product.image_link,
+      price: product.price || 0,
+      image: product.image_link || product.image,
     };
 
     saveToLocalStorage(itemDetails);
 
     alert(
-      `¡${itemDetails.productId} (${
-        itemDetails.size || "Unidad"
-      }) agregado al carrito!`
+      `¡${itemDetails.productName} agregado al carrito!`
     );
     setQuantity(1);
   };
 
-  //aun no se establece la logica para productos aleatorios
+  // 6. Sugerencias
   const suggestions = [
-    menuData.complementos.find((c) => c.title === "Papas gajo"),
-    menuData.postres.find((p) => p.title === "Flan Napolitano"),
-    menuData.complementos.find((c) => c.title === "Chimichurri"),
-    { title: null },
+    menuData.complementos?.find((c) => c.title === "Papas gajo"),
+    menuData.postres?.find((p) => p.title === "Flan Napolitano"),
+    menuData.complementos?.find((c) => c.title === "Chimichurri"),
   ].filter(Boolean);
+
+  // 7. Retornos condicionales (después de todos los hooks)
+  if (loading) {
+    return <h1 className="page-padding">Cargando producto...</h1>;
+  }
+
+  if (error) {
+    return <h1 className="page-padding">{error}</h1>;
+  }
+
+  if (!product || Object.keys(product).length === 0) {
+    return <h1 className="page-padding">Error 404: Producto no encontrado.</h1>;
+  }
+
+  // 8. Precio del producto
+  const price = product.price || 0;
 
   return (
     <div className="product-detail-page-container page-padding">
@@ -120,15 +124,19 @@ function OthersDetailPage() {
         <div className="product-detail-image">
           <img
             className="rounded"
-            src={product.image_link}
-            alt={product.name}
+            src={product.image_link || product.image}
+            alt={product.name || product.title}
             width="473"
             height="275"
+            style={{ objectFit: "cover" }}
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/473x275?text=Imagen+no+disponible";
+            }}
           />
         </div>
 
         <div className="product-detail-info">
-          <h1>{product.name}</h1>
+          <h1>{product.name || product.title}</h1>
           <p className="product-description fs-6">{product.description}</p>
 
           <p className="product-price-display fs-5">${price} MXN</p>
@@ -160,16 +168,18 @@ function OthersDetailPage() {
         </div>
       </div>
 
-      <section className="suggestions-section">
-        <h2 style={{ marginBottom: "10px" }}>
-          Sugerencias para agregar a tu pedido
-        </h2>
-        <div className="suggestions-grid d-flex justify-content-evenly flex-wrap">
-          {suggestions.map((suggestion, index) => (
-            <SuggestionCard key={index} product={suggestion} />
-          ))}
-        </div>
-      </section>
+      {suggestions.length > 0 && (
+        <section className="suggestions-section">
+          <h2 style={{ marginBottom: "10px" }}>
+            Sugerencias para agregar a tu pedido
+          </h2>
+          <div className="suggestions-grid d-flex justify-content-evenly flex-wrap">
+            {suggestions.map((suggestion, index) => (
+              <SuggestionCard key={index} product={suggestion} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

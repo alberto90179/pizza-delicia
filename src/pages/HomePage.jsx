@@ -1,22 +1,53 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 // Nota: Puedes reutilizar los componentes HeroSection, ComboSection, etc. aquí si los mueves a common/
-// Por simplicidad, he dejado el código de la Home Page directamente en el Page Component.
+// Por simplicidad, este componente define todo directamente.
 
 function HomePage() {
   const promoSemana = {
     id: 99,
     title: "2 pizzas medianas de 2 ingredientes",
-    description: "Llévate 2 pizzas medianas de 2 ingredientes a tan solo $180 pesos",
-    image: "https://cdn7.kiwilimon.com/recetaimagen/41724/960x640/57505.jpg.jpg",
+    description:
+      "Llévate 2 pizzas medianas de 2 ingredientes a tan solo $180 pesos",
+    image:
+      "https://cdn7.kiwilimon.com/recetaimagen/41724/960x640/57505.jpg.jpg",
   };
-  
+
   const comboSemana = {
     id: 100,
-    title: "Combo de la Para estas fiestas patrias",
-    description: "2 pizzas mexicanas, 1 orden de nachos, salsa macha y un refresco de 2 lts a solo $240 pesos",
-    image: "https://web.didiglobal.com/_next/image/?url=https%3A%2F%2Fimg0.didiglobal.com%2Fstatic%2Fsoda_public%2Fimg_9c79865e66d44bb79f9d2ac458688a3e.JPG4_3&w=3840&q=75",
+    title: "Combo para estas fiestas patrias",
+    description:
+      "2 pizzas mexicanas, 1 orden de nachos, salsa macha y un refresco de 2 L a solo $240 pesos",
+    image:
+      "https://img0.didiglobal.com/static/soda_public/img_9c79865e66d44bb79f9d2ac458688a3e.JPG4_3",
   };
+
+  const comments = [
+    {
+      id: 1,
+      user: "María López",
+      comment:
+        "Las pizzas están deliciosas y el servicio fue excelente. ¡Recomendadísimo!",
+    },
+    {
+      id: 2,
+      user: "Carlos Méndez",
+      comment:
+        "El combo de fiestas patrias estuvo genial, muy buena relación calidad-precio.",
+    },
+    {
+      id: 3,
+      user: "Lucía Torres",
+      comment:
+        "Llegó todo calientito y rápido, sin duda volveré a pedir.",
+    },
+    {
+      id: 4,
+      user: "Juan Pérez",
+      comment:
+        "Excelente atención al cliente, las pizzas con mucho sabor.",
+    },
+  ];
 
   return (
     <div className="home-page-container">
@@ -25,7 +56,9 @@ function HomePage() {
         <div className="hero-content">
           <h1>La Pizza Delicia</h1>
           <p>Nos reinventamos para brindar una mejor experiencia</p>
-          <Link to="/menu" className="btn btn-hero-menu">Menú</Link>
+          <Link to="/menu" className="btn btn-hero-menu">
+            Ver Menú
+          </Link>
         </div>
       </div>
 
@@ -39,13 +72,21 @@ function HomePage() {
               <button className="btn btn-secondary">Ordenar</button>
             </div>
             <div className="promo-image">
-              <img src={promoSemana.image} alt={promoSemana.title} />
+              <img
+                src={promoSemana.image}
+                alt={promoSemana.title}
+                loading="lazy"
+              />
             </div>
           </div>
 
           <div className="promo-item promo-second">
             <div className="promo-image">
-              <img src={comboSemana.image} alt={comboSemana.title} />
+              <img
+                src={comboSemana.image}
+                alt={comboSemana.title}
+                loading="lazy"
+              />
             </div>
             <div className="promo-description">
               <h2>{comboSemana.title}</h2>
@@ -59,11 +100,11 @@ function HomePage() {
         <section className="comments-section">
           <h2>Comentarios destacados</h2>
           <div className="comments-grid">
-            {["Nombre de usuario #1", "Nombre de usuario #2", "Nombre de usuario #3", "Nombre de usuario #4"].map((user, index) => (
-              <div key={index} className="comment-card">
+            {comments.map((item) => (
+              <div key={item.id} className="comment-card">
                 <span className="comment-icon">👤</span>
-                <h4>{user}</h4>
-                <p>Cuerpo del comentario</p>
+                <h4>{item.user}</h4>
+                <p>{item.comment}</p>
               </div>
             ))}
           </div>

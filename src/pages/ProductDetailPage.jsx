@@ -1,54 +1,47 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import SuggestionCard from "../components/common/SuggestionCard";
-import { findProductById, menuData } from "../components/data/menuData";
+import { menuData } from "../components/data/menuData";
 import axios from "axios";
 
 function ProductDetailPage() {
-  // 1. Obtener ID y producto (Lógica previa a los hooks)
-  const { id } = useParams(); //recibe el id desde la url
-  const { cat } = useParams(); // recibe la categoria del producto
-  const product = findProductById(id);
+  // 1️⃣ Obtener parámetros desde la URL
+  const { id } = useParams(); // Solo usamos el id
 
-  //request al servidor por producto carga los estados iniciales solo de pizzas
-  const [pizza, setPizza] = useState({});
-
-  //evalua la categoria e inicia el estado de la variable correspondiente
-  useEffect(() => {
-    getPizza();
-  }, []);
-
-  const getPizza = async () => {
-    const res = await axios.get(
-      `https://service-pizzadelicia-v1.gulliferwd.com/api/pizza/${id}`
-    );
-    setPizza(res.data);
-  };
-
-  // 2. Cálculo del estado inicial (Debe hacerse antes de llamar a useState)
-  // Usamos el operador ?. (optional chaining) para evitar errores si 'product' es null.
-  const defaultSize = pizza?.prices ? pizza.prices[0] : null;
-
-  // 3. ✅ HOOKS LLAMADOS PRIMERO (Esta es la sección correcta)
-  const [selectedSize, setSelectedSize] = useState(defaultSize);
+  // 2️⃣ Estados iniciales
+  const [pizza, setPizza] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  // 4. RETORNO CONDICIONAL (Debe ir DESPUÉS de todos los hooks)
+  // 3️⃣ useEffect para cargar producto (sin advertencias)
+  useEffect(() => {
+    const getPizza = async () => {
+      try {
+        const res = await axios.get(
+          `https://service-pizzadelicia-v1.gulliferwd.com/api/pizza/${id}`
+        );
+        setPizza(res.data);
+      } catch (error) {
+        console.error("Error al cargar la pizza:", error);
+        setPizza(null);
+      }
+    };
+
+    getPizza();
+  }, [id]); // ✅ Solo depende del id
+
+  // 4️⃣ Si no hay datos, mostrar mensaje
   if (!pizza) {
-    return <h1 className="page-padding">Error 404: Producto no encontrado.</h1>;
+    return <h1 className="page-padding">Cargando producto...</h1>;
   }
 
-  // 5. LÓGICA DE PRECIOS Y CARRITO (Solo se ejecuta si el producto existe)
-  let currentPrice = 0;
-  if (selectedSize != null) {
-    currentPrice = selectedSize.price;
-  } else {
-    currentPrice = pizza.price;
-  }
+  // 5️⃣ Lógica de precios
+  const currentPrice =
+    selectedSize?.price ?? pizza.price ?? 0;
 
+  // 6️⃣ Guardar producto en localStorage
   const saveToLocalStorage = (item) => {
     const cart = JSON.parse(localStorage.getItem("pizzaDeliciaCart") || "[]");
-
     const existingIndex = cart.findIndex(
       (i) => i.productId === item.productId && i.size === item.size
     );
@@ -62,6 +55,7 @@ function ProductDetailPage() {
     localStorage.setItem("pizzaDeliciaCart", JSON.stringify(cart));
   };
 
+  // 7️⃣ Agregar al carrito
   const handleAddToCart = () => {
     if (pizza.prices && !selectedSize) {
       alert("Por favor, selecciona un tamaño antes de agregar al carrito.");
@@ -71,28 +65,24 @@ function ProductDetailPage() {
     const itemDetails = {
       productId: pizza.id,
       productName: pizza.pizza,
-      size: selectedSize.size,
-      quantity: quantity,
-      price: selectedSize.price,
-      image: pizza.image,
+      size: selectedSize?.size || "Unidad",
+      quantity,
+      price: currentPrice,
+      image: pizza.image || pizza.image_link,
     };
 
     saveToLocalStorage(itemDetails);
-
     alert(
-      `¡${itemDetails.productId} (${
-        itemDetails.size || "Unidad"
-      }) agregado al carrito!`
+      `¡${itemDetails.productName} (${itemDetails.size}) agregado al carrito!`
     );
     setQuantity(1);
   };
 
-  //aun no se establece la logica para productos aleatorios
+  // 8️⃣ Sugerencias
   const suggestions = [
     menuData.complementos.find((c) => c.title === "Papas gajo"),
     menuData.postres.find((p) => p.title === "Flan Napolitano"),
     menuData.complementos.find((c) => c.title === "Chimichurri"),
-    { title: null },
   ].filter(Boolean);
 
   return (
@@ -104,7 +94,7 @@ function ProductDetailPage() {
         <div className="product-detail-image">
           <img
             className="rounded"
-            src={pizza.image ? pizza.image : pizza.image_link}
+            src={pizza.image || pizza.image_link}
             alt={pizza.pizza}
             width="473"
             height="275"
@@ -120,16 +110,16 @@ function ProductDetailPage() {
           {/* Opciones de Tamaño */}
           {pizza.prices && (
             <div className="size-options">
-              {pizza.prices.map((sizeName) => (
+              {pizza.prices.map((sizeObj, index) => (
                 <button
-                  key={sizeName}
+                  key={index}
                   className={`size-btn ${
-                    selectedSize === sizeName ? "active" : ""
+                    selectedSize === sizeObj ? "active" : ""
                   } btn btn-add-cart`}
-                  onClick={() => setSelectedSize(sizeName)}
+                  onClick={() => setSelectedSize(sizeObj)}
                   style={{ margin: "5px" }}
                 >
-                  {sizeName.size}
+                  {sizeObj.size}
                 </button>
               ))}
             </div>

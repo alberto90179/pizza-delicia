@@ -3,15 +3,12 @@ import { findProductById } from "../components/data/menuData";
 import axios from "axios";
 
 function CartPage() {
-  // Estado para almacenar los ítems enriquecidos del carrito
   const [cartItems, setCartItems] = useState([]);
+  const [metodoPago, setMetodoPago] = useState("");
   const [cashCheck, setCashCheck] = useState(false);
   const [cardCheck, setCardCheck] = useState(false);
-  const [metodoPago, setMetodoPAgo] = useState("");
-  const [enabledInput, setEnabledInput] = useState("disabled"); //en desarrollo
 
-  //estados para los datos del cliente
-
+  // Estados para los datos del cliente
   const [nameInput, setNameInput] = useState("");
   const [calleInput, setCalleInput] = useState("");
   const [coloniaInput, setColoniaInput] = useState("");
@@ -19,9 +16,45 @@ function CartPage() {
   const [municipioInput, setMunicipioInput] = useState("");
   const [phoneInput, setPhoneInput] = useState("");
 
-  //Funcion para insertar en la base de datos un pedido
+  // Función para obtener la fecha actual
+  const getFecha = () => {
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const year = currentDate.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
+  // Función para obtener la hora actual
+  const getHora = () => {
+    const currentTime = new Date();
+    const hour = String(currentTime.getHours()).padStart(2, "0");
+    const min = String(currentTime.getMinutes()).padStart(2, "0");
+    return `${hour}:${min}`;
+  };
+
+  // Selección del método de pago
+  const handleCheckCash = (e) => {
+    const checked = e.target.checked;
+    setCashCheck(checked);
+    setCardCheck(false);
+    setMetodoPago(checked ? "efectivo" : "");
+  };
+
+  const handleCheckCard = (e) => {
+    const checked = e.target.checked;
+    setCardCheck(checked);
+    setCashCheck(false);
+    setMetodoPago(checked ? "tarjeta" : "");
+  };
+
+  // Enviar pedido al backend
   const postPedido = async () => {
+    if (!metodoPago) {
+      alert("Por favor selecciona un método de pago antes de continuar.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://pizza-delicia-api-pedidos.vercel.app/pedidos",
@@ -35,55 +68,35 @@ function CartPage() {
           metodoPago: metodoPago,
           productos: cartItems,
           total: totalMx,
+          date: getFecha(),
+          time: getHora(),
         }
       );
-      alert("Pedido enviado", response.data);
+      alert("Pedido enviado correctamente.");
       localStorage.clear();
       setCartItems([]);
     } catch (e) {
-      alert(e);
+      alert("Error al enviar el pedido: " + e);
     }
   };
 
-  //detecta el checkbox y si está seleccionado asigna la cadena "efectivo"
-  const handleCheckCash = (e) => {
-    setCashCheck(e.target.checked);
-    setMetodoPAgo(e.target.value);
-  };
-
-  //detecta el checkbox y si está seleccionado habilita los campos para los datos de la tarjeta
-  //EN DESARROLLO
-  const handleEnabledInput = (e) => {
-    setCardCheck(e.target.checked);
-    setEnabledInput("");
-  };
-
-  // ----------------------------------------------------
-  // 💡 LÓGICA DE CARGA Y GUARDADO DEL CARRITO
-  // ----------------------------------------------------
-
-  // Función para obtener y enriquecer los datos del carrito desde LocalStorage
+  // Cargar carrito desde localStorage
   const loadCart = () => {
-    const rawCart = JSON.parse(
-      localStorage.getItem("pizzaDeliciaCart") || "[]"
-    );
+    const rawCart = JSON.parse(localStorage.getItem("pizzaDeliciaCart") || "[]");
 
     const enrichedItems = rawCart
       .map((item) => {
         const product = findProductById(item.productId);
         if (!product) return null;
 
-        // Determinar el precio unitario
-        const itemPriceUnit = item.prices
-          ? item.prices[item].price
-          : item.price;
+        const price = item.price || product.price || 0;
 
         return {
           ...item,
-          title: item.pizza,
-          image: item.image,
-          price: itemPriceUnit,
-          subtotal: itemPriceUnit * item.quantity,
+          title: item.pizza || product.title,
+          image: item.image || product.image,
+          price: price,
+          subtotal: price * item.quantity,
         };
       })
       .filter((item) => item !== null);
@@ -91,9 +104,7 @@ function CartPage() {
     setCartItems(enrichedItems);
   };
 
-  // Función para guardar el estado del carrito en LocalStorage
   const saveCartToStorage = (items) => {
-    // Guardamos solo los datos mínimos (productId, size, quantity)
     const simplifiedCart = items.map((item) => ({
       productId: item.productId,
       size: item.size,
@@ -102,25 +113,18 @@ function CartPage() {
     localStorage.setItem("pizzaDeliciaCart", JSON.stringify(simplifiedCart));
   };
 
-  // Cargar el carrito al montar el componente
   useEffect(() => {
     loadCart();
   }, []);
-
-  // ----------------------------------------------------
-  // 💡 LÓGICA DE MODIFICACIÓN DE CANTIDAD
-  // ----------------------------------------------------
 
   const updateQuantity = (index, delta) => {
     const newCart = [...cartItems];
     newCart[index].quantity += delta;
 
     if (newCart[index].quantity <= 0) {
-      // Eliminar el ítem si la cantidad es 0 o menos
       newCart.splice(index, 1);
     }
 
-    // Recalcular el subtotal para el render
     newCart.forEach((item) => {
       item.subtotal = item.price * item.quantity;
     });
@@ -129,7 +133,6 @@ function CartPage() {
     saveCartToStorage(newCart);
   };
 
-  // Función para eliminar un ítem directamente
   const removeItem = (index) => {
     const newCart = [...cartItems];
     newCart.splice(index, 1);
@@ -137,27 +140,21 @@ function CartPage() {
     saveCartToStorage(newCart);
   };
 
-  // ----------------------------------------------------
-  // 💡 RENDERIZADO
-  // ----------------------------------------------------
-
   const totalMx = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
 
   return (
     <div className="cart-page-container page-padding">
-      {/* Encabezado del Carrito y Total */}
       <div className="cart-header d-flex flex-wrap justify-content-between">
         <h2>MIS PRODUCTOS SELECCIONADOS</h2>
         <h2 className="total-mxn">TOTAL MXN: ${totalMx}.00</h2>
       </div>
 
-      {/* Lista de Productos en el Carrito */}
       <div className="cart-items-list d-flex justify-content-evenly flex-wrap">
         {cartItems.length === 0 ? (
           <p>Tu carrito está vacío. ¡Añade algo delicioso!</p>
         ) : (
           cartItems.map((item, index) => (
-            <div key={index} className="cart-item" style={{ width: "473" }}>
+            <div key={index} className="cart-item" style={{ width: "473px" }}>
               <img
                 src={item.image}
                 alt={item.title}
@@ -173,28 +170,25 @@ function CartPage() {
                 </p>
                 <p className="item-price-display">${item.subtotal} MXN</p>
 
-                {/* Controles de Cantidad y Eliminación */}
                 <div className="cart-controls">
                   <button
                     onClick={() => updateQuantity(index, -1)}
-                    className="btn-quantity-control btn btn-secondary"
+                    className="btn btn-secondary"
                     style={{ margin: "5px" }}
                   >
                     -
                   </button>
-                  <span className="current-quantity" style={{ margin: "5px" }}>
-                    {item.quantity}
-                  </span>
+                  <span style={{ margin: "5px" }}>{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(index, 1)}
-                    className="btn-quantity-control btn btn-secondary"
+                    className="btn btn-secondary"
                     style={{ margin: "5px" }}
                   >
                     +
                   </button>
                   <button
                     onClick={() => removeItem(index)}
-                    className="btn-remove-item btn"
+                    className="btn"
                     style={{ margin: "5px", backgroundColor: "grey" }}
                   >
                     🗑️
@@ -205,10 +199,9 @@ function CartPage() {
           ))
         )}
       </div>
+
       <hr />
 
-      {/* Resto de las secciones (Envío y Pago) se mantienen estáticas */}
-      {/* Sección Datos de Envío */}
       <section className="shipping-data-section" style={{ marginTop: "40px" }}>
         <h2>DATOS DE ENVÍO</h2>
         <div className="shipping-form-grid row">
@@ -216,98 +209,78 @@ function CartPage() {
             <input
               type="text"
               placeholder="Nombre"
-              className="input-half form-control mb-5"
-              id="nombre"
-              onChange={(e) => {
-                setNameInput(e.target.value);
-              }}
+              className="form-control mb-5"
+              onChange={(e) => setNameInput(e.target.value)}
             />
           </div>
           <div className="col-4">
             <input
               type="text"
               placeholder="Calle o avenida"
-              className="input-half form-control mb-5"
-              onChange={(e) => {
-                setCalleInput(e.target.value);
-              }}
+              className="form-control mb-5"
+              onChange={(e) => setCalleInput(e.target.value)}
             />
           </div>
           <div className="col-4">
             <input
               type="text"
               placeholder="Colonia"
-              className="input-half form-control mb-5"
-              onChange={(e) => {
-                setColoniaInput(e.target.value);
-              }}
+              className="form-control mb-5"
+              onChange={(e) => setColoniaInput(e.target.value)}
             />
           </div>
           <div className="col-4">
             <input
               type="text"
               placeholder="Código postal"
-              className="input-half form-control mb-5"
-              onChange={(e) => {
-                setCpInput(e.target.value);
-              }}
+              className="form-control mb-5"
+              onChange={(e) => setCpInput(e.target.value)}
             />
           </div>
           <div className="col-4">
             <input
               type="text"
-              defaultValue="Delegación o municipio"
-              className="input-half form-control mb-5"
-              onChange={(e) => {
-                setMunicipioInput(e.target.value);
-              }}
+              placeholder="Delegación o municipio"
+              className="form-control mb-5"
+              onChange={(e) => setMunicipioInput(e.target.value)}
             />
           </div>
           <div className="col-4">
             <input
               type="tel"
               placeholder="Teléfono"
-              defaultValue="3336394550"
-              className="input-half form-control mb-5"
-              onChange={(e) => {
-                setPhoneInput(e.target.value);
-              }}
+              className="form-control mb-5"
+              onChange={(e) => setPhoneInput(e.target.value)}
             />
           </div>
         </div>
       </section>
 
-      {/* Sección Método de Pago */}
       <section className="payment-method-section">
         <h2>MÉTODO DE PAGO</h2>
         <div className="payment-options">
           <div className="payment-group payment-cash">
             <h3>
-              <span>
-                <input
-                  type="checkbox"
-                  id="cash"
-                  className="form-check-input"
-                  value="efectivo"
-                  checked={cashCheck}
-                  onChange={handleCheckCash}
-                />
-              </span>{" "}
-              Efectivo {cashCheck ? metodoPago : "desmarcado"}
+              <input
+                type="checkbox"
+                id="cash"
+                className="form-check-input"
+                checked={cashCheck}
+                onChange={handleCheckCash}
+              />{" "}
+              Efectivo
             </h3>
           </div>
+
           <div className="payment-group payment-card">
             <h3>
-              <span>
-                <input
-                  type="checkbox"
-                  id="card"
-                  className="form-check-input mb-5"
-                  value="tarjeta"
-                  onChange={handleEnabledInput}
-                  disabled
-                />
-              </span>{" "}
+              <input
+                type="checkbox"
+                id="card"
+                className="form-check-input"
+                checked={cardCheck}
+                onChange={handleCheckCard}
+              />{" "}
               Tarjeta débito/crédito
             </h3>
 
@@ -316,40 +289,32 @@ function CartPage() {
                 <input
                   type="text"
                   placeholder="Nombre del titular"
-                  className="input-full form-control mb-5"
-                  disabled
+                  className="form-control mb-5"
+                  disabled={!cardCheck}
                 />
               </div>
               <div className="col-4">
                 <input
                   type="text"
                   placeholder="Número de tarjeta (16 dígitos)"
-                  className="input-full form-control mb-5"
-                  disabled
+                  className="form-control mb-5"
+                  disabled={!cardCheck}
                 />
               </div>
-              <div className="col-4">
+              <div className="col-2">
                 <input
                   type="text"
                   placeholder="mm/aa"
-                  className="input-quarter form-control mb-5"
-                  disabled
+                  className="form-control mb-5"
+                  disabled={!cardCheck}
                 />
               </div>
-              <div className="col-4">
+              <div className="col-2">
                 <input
                   type="text"
-                  placeholder="3 dígitos (CVV)"
-                  className="input-quarter form-control mb-5"
-                  disabled
-                />
-              </div>
-              <div className="col-4">
-                <input
-                  type="email"
-                  placeholder="ejemplo@gmail.com"
-                  className="input-full form-control mb-5"
-                  disabled
+                  placeholder="CVV"
+                  className="form-control mb-5"
+                  disabled={!cardCheck}
                 />
               </div>
             </div>
@@ -357,8 +322,7 @@ function CartPage() {
         </div>
       </section>
 
-      {/* Botón de Pago Final */}
-      <button className="btn btn-pay-order" onClick={(e) => postPedido()}>
+      <button className="btn btn-pay-order" onClick={postPedido}>
         Pagar ${totalMx}.00 MXN y ordenar
       </button>
     </div>
