@@ -1,3 +1,22 @@
+/* === ENLACE DE LOGIN EN EL FOOTER === */
+.footer-login-link { 
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer-login-btn {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-login-btn:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* === VARIABLES DE COLOR Y CONFIGURACIÓN GLOBAL === */
 :root {
   --primary-color: #e4002b;
   --text-color: #333;
@@ -356,132 +375,8 @@ body {
   height: 30px;
 }
 
-/* ================================================= */
-/* === ABOUT PAGE STYLES === */
-/* ================================================= */
-
-.about-page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.conocenos-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 60px;
-  padding: 60px 5%;
-  background-color: #fff;
-}
-
-.conocenos-text {
-  flex: 1;
-  max-width: 600px;
-}
-
-.conocenos-text h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #000;
-  margin-bottom: 15px;
-}
-
-.conocenos-text .large-text {
-  color: #777;
-  font-weight: 500;
-  margin-bottom: 25px;
-}
-
-.conocenos-text p {
-  color: #333;
-  line-height: 1.7;
-  margin-bottom: 15px;
-  font-size: 1rem;
-}
-
-.conocenos-image {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.conocenos-image img {
-  width: 100%;
-  max-width: 450px;
-  border-radius: 15px;
-  object-fit: cover;
-}
-
-.contact-section {
-  padding: 40px 5%;
-  background-color: #fff;
-}
-
-.contact-section h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 25px;
-}
-
-.contact-form {
-  max-width: 600px;
-}
-
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  margin-bottom: 15px;
-}
-
-.contact-form textarea {
-  resize: none;
-  height: 120px;
-}
-
-.form-submit-btn {
-  width: 100%;
-  background-color: #000;
-  color: #fff;
-  font-size: 1rem;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.form-submit-btn:hover {
-  background-color: #e4002b;
-}
-
-.events-section {
-  padding: 30px 5%;
-  background-color: #fff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000;
-  text-align: center;
-}
-
-/* =========================== */
 /* === RESPONSIVE DESIGN === */
-/* =========================== */
 @media (max-width: 992px) {
-  .conocenos-section {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .conocenos-image {
-    width: 100%;
-    max-width: 400px;
-  }
-
   .footer-container {
     flex-direction: column;
     align-items: center;
@@ -493,67 +388,11 @@ body {
 }
 
 @media (max-width: 768px) {
-  .promo-item,
-  .promo-item.promo-second {
-    flex-direction: column;
-    text-align: center;
+  .menu-grid {
+    grid-template-columns: 1fr;
   }
 
   .comments-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .hero-content h1 {
-    font-size: 2.5rem;
-  }
-
-  .hero-content p {
-    font-size: 1.2rem;
-  }
-
-  .promo-description {
-    text-align: center;
-  }
-
-  .menu-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .main-header {
-    flex-wrap: wrap;
-    padding: 10px 5%;
-  }
-
-  .header-menu {
-    width: 100%;
-    justify-content: space-around;
-    margin-top: 10px;
-  }
-
-  .conocenos-text h1 {
-    font-size: 2.3rem;
-  }
-
-  .contact-form {
-    width: 100%;
-  }
-
-  .footer-container {
-    text-align: center;
-  }
-
-  .hero-section {
-    height: 60vh;
-  }
-
-  .hero-content h1 {
-    font-size: 2rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
@@ -7,30 +8,29 @@ function Footer() {
       <div className="footer-card footer-social">
         <p>Síguenos en redes sociales</p>
         <div className="social-icons">
-          
           {/* Facebook */}
           <a href="https://www.facebook.com/LaPizzaDelicia" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000" 
-              alt="Facebook" 
+            <img
+              src="https://img.icons8.com/?size=100&id=118497&format=png&color=000000"
+              alt="Facebook"
               className="social-icon-img"
             />
           </a>
-          
+
           {/* Instagram */}
           <a href="https://www.instagram.com/LaPizzaDelicia" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="https://img.icons8.com/?size=100&id=nj0Uj45LGUYh&format=png&color=000000" 
-              alt="Instagram" 
+            <img
+              src="https://img.icons8.com/?size=100&id=nj0Uj45LGUYh&format=png&color=000000"
+              alt="Instagram"
               className="social-icon-img"
             />
           </a>
-          
+
           {/* YouTube */}
           <a href="https://www.youtube.com/@LaPizzaDelicia" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="https://img.icons8.com/?size=100&id=p4rU35mvmXMQ&format=png&color=000000" 
-              alt="YouTube" 
+            <img
+              src="https://img.icons8.com/?size=100&id=p4rU35mvmXMQ&format=png&color=000000"
+              alt="YouTube"
               className="social-icon-img"
             />
           </a>
@@ -40,10 +40,10 @@ function Footer() {
       {/* Tarjeta 2: Información del Desarrollador */}
       <div className="footer-card footer-developer">
         Desarrollado por: <br /><br />
-            &copy; Misael Villanueva Méndez <br />&copy; Alberto Amézquita Ayón
-            <br />&copy; Fernando Córdova Mendoza
+        &copy; Misael Villanueva Méndez <br />
+        &copy; Alberto Amézquita Ayón <br />
+        &copy; Fernando Córdova Mendoza
       </div>
-
 
       {/* Tarjeta 3: Ubicación y Contacto */}
       <div className="footer-card footer-location">
@@ -51,6 +51,15 @@ function Footer() {
         <p>Av. Principal No. 123</p>
         <p>Colonia Centro, Zapopan, Jalisco, México</p>
         <p>Tel: 3336658545</p>
+      </div>
+
+      {/* 🔹 Enlace al Login */}
+      <div className="footer-login-link">
+        <p>
+          <Link to="/login" className="footer-login-btn">
+            Iniciar sesión como administrador 🔐
+          </Link>
+        </p>
       </div>
     </footer>
   );
