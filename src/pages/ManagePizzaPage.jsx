@@ -87,7 +87,7 @@ const ManagePizzaPage = () => {
       });
   };
 
-  //metodo para agregar precio
+  //metodo para agregar precio, necesita de la existencia de una pizza para vincular el id con el precio
 
   const addPrice = async () => {
     const res = await axios
