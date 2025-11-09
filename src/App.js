@@ -23,6 +23,9 @@ import OthersDetailPage from "./pages/OthersDetailPage";
 // 🔹 Páginas de autenticación y administración
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
+import PortalPage from "./pages/PortalPage";
+import AdminProductosPage from "./pages/AdminProductosPage";
+import ManagePizzaPage from "./pages/ManagePizzaPage";
 
 export default function App() {
   return (
@@ -44,10 +47,37 @@ export default function App() {
 
             {/* 🔹 Ruta protegida (solo acceso con login) */}
             <Route
-              path="/admin/productos"
+              path="/admin/pedidos"
               element={
                 <ProtectedRoute>
                   <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/portal"
+              element={
+                <ProtectedRoute>
+                  <PortalPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/manage-menu/pizza"
+              element={
+                <ProtectedRoute>
+                  <ManagePizzaPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/manage-menu"
+              element={
+                <ProtectedRoute>
+                  <AdminProductosPage />
                 </ProtectedRoute>
               }
             />
@@ -68,4 +98,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-  

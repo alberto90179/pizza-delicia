@@ -13,7 +13,7 @@ export default function LoginPage() {
     e.preventDefault();
     const success = login(email, password);
     if (success) {
-      navigate("/admin/productos");
+      navigate("/admin/portal");
     } else {
       setError("Credenciales incorrectas");
     }

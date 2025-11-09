@@ -19,7 +19,7 @@ export default function AdminPage() {
     phone: "",
     metodoPago: "efectivo",
     productos: [],
-    total: 0
+    total: 0,
   });
   const [cargando, setCargando] = useState(false);
 
@@ -46,7 +46,7 @@ export default function AdminPage() {
     e.preventDefault();
     try {
       setCargando(true);
-      
+
       if (!nuevo.name.trim()) {
         alert("El nombre del cliente es requerido");
         return;
@@ -62,12 +62,12 @@ export default function AdminPage() {
         metodoPago: nuevo.metodoPago,
         productos: nuevo.productos,
         total: parseFloat(nuevo.total) || 0,
-        fecha: new Date().toISOString()
+        fecha: new Date().toISOString(),
       };
 
       const res = await axios.post(API_URL, pedidoData);
-      setPedidos(prev => [...prev, res.data]);
-      
+      setPedidos((prev) => [...prev, res.data]);
+
       setNuevo({
         name: "",
         calle: "",
@@ -77,9 +77,9 @@ export default function AdminPage() {
         phone: "",
         metodoPago: "efectivo",
         productos: [],
-        total: 0
+        total: 0,
       });
-      
+
       alert("✅ Pedido agregado correctamente");
     } catch (err) {
       console.error("Error al agregar pedido:", err);
@@ -103,9 +103,9 @@ export default function AdminPage() {
 
   // ✅ Actualizar campo en edición
   const actualizarCampoEditado = (campo, valor) => {
-    setPedidoEditado(prev => ({
+    setPedidoEditado((prev) => ({
       ...prev,
-      [campo]: valor
+      [campo]: valor,
     }));
   };
 
@@ -113,7 +113,7 @@ export default function AdminPage() {
   const guardarPedido = async (id) => {
     try {
       setCargando(true);
-      
+
       if (!pedidoEditado.name?.trim()) {
         alert("El nombre del cliente es requerido");
         return;
@@ -128,7 +128,7 @@ export default function AdminPage() {
         phone: pedidoEditado.phone?.trim() || "",
         metodoPago: pedidoEditado.metodoPago || "efectivo",
         productos: pedidoEditado.productos || [],
-        total: parseFloat(pedidoEditado.total) || 0
+        total: parseFloat(pedidoEditado.total) || 0,
       };
 
       console.log("Enviando actualización para:", id);
@@ -145,21 +145,25 @@ export default function AdminPage() {
       }
 
       // Actualizar estado local con los datos modificados
-      const pedidosActualizados = pedidos.map(p => 
+      const pedidosActualizados = pedidos.map((p) =>
         p._id === id ? { ...p, ...pedidoActualizado } : p
       );
       setPedidos(pedidosActualizados);
-      
+
       setEditando(null);
       setPedidoEditado({});
-      
+
       alert("✅ Pedido actualizado correctamente (localmente)");
     } catch (err) {
       console.error("Error al actualizar pedido:", err);
-      
+
       // Si falla la actualización en el servidor, actualizar solo localmente
-      if (window.confirm("No se pudo actualizar en el servidor. ¿Actualizar solo localmente?")) {
-        const pedidosActualizados = pedidos.map(p => 
+      if (
+        window.confirm(
+          "No se pudo actualizar en el servidor. ¿Actualizar solo localmente?"
+        )
+      ) {
+        const pedidosActualizados = pedidos.map((p) =>
           p._id === id ? { ...p, ...pedidoEditado } : p
         );
         setPedidos(pedidosActualizados);
@@ -174,11 +178,16 @@ export default function AdminPage() {
 
   // ✅ SOLUCIÓN PARA ELIMINAR: Manejo local ya que DELETE no funciona
   const eliminarPedido = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar este pedido? Esta acción no se puede deshacer.")) return;
-    
+    if (
+      !window.confirm(
+        "¿Estás seguro de eliminar este pedido? Esta acción no se puede deshacer."
+      )
+    )
+      return;
+
     try {
       setCargando(true);
-      
+
       // Intentar eliminar en el servidor
       try {
         await axios.delete(`${API_URL}/${id}`);
@@ -193,15 +202,18 @@ export default function AdminPage() {
       }
 
       // Siempre eliminar localmente
-      setPedidos(prev => prev.filter(p => p._id !== id));
+      setPedidos((prev) => prev.filter((p) => p._id !== id));
       alert("✅ Pedido eliminado correctamente");
-      
     } catch (err) {
       console.error("Error al eliminar pedido:", err);
-      
+
       // Si falla en el servidor, eliminar solo localmente
-      if (window.confirm("No se pudo eliminar en el servidor. ¿Eliminar solo localmente?")) {
-        setPedidos(prev => prev.filter(p => p._id !== id));
+      if (
+        window.confirm(
+          "No se pudo eliminar en el servidor. ¿Eliminar solo localmente?"
+        )
+      ) {
+        setPedidos((prev) => prev.filter((p) => p._id !== id));
         alert("✅ Pedido eliminado localmente");
       }
     } finally {
@@ -215,25 +227,25 @@ export default function AdminPage() {
       productName: "Pizza Margarita",
       size: "Mediana",
       quantity: 1,
-      price: 150.00,
+      price: 150.0,
       // ✅ AGREGAR KEY ÚNICA
-      id: Date.now() + Math.random()
+      id: Date.now() + Math.random(),
     };
-    
-    setNuevo(prev => ({
+
+    setNuevo((prev) => ({
       ...prev,
       productos: [...prev.productos, nuevoProducto],
-      total: prev.total + nuevoProducto.price
+      total: prev.total + nuevoProducto.price,
     }));
   };
 
   // ✅ Eliminar producto del nuevo pedido
   const eliminarProducto = (index) => {
     const productoEliminado = nuevo.productos[index];
-    setNuevo(prev => ({
+    setNuevo((prev) => ({
       ...prev,
       productos: prev.productos.filter((_, i) => i !== index),
-      total: prev.total - productoEliminado.price
+      total: prev.total - productoEliminado.price,
     }));
   };
 
@@ -242,10 +254,18 @@ export default function AdminPage() {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Panel de Administración — Pedidos</h2>
         <div>
-          <button className="btn btn-info me-2" onClick={obtenerPedidos} disabled={cargando}>
+          <button
+            className="btn btn-info me-2"
+            onClick={obtenerPedidos}
+            disabled={cargando}
+          >
             🔄 Actualizar
           </button>
-          <button className="btn btn-danger" onClick={logout} disabled={cargando}>
+          <button
+            className="btn btn-danger"
+            onClick={logout}
+            disabled={cargando}
+          >
             Cerrar sesión
           </button>
         </div>
@@ -253,11 +273,19 @@ export default function AdminPage() {
 
       <p>
         Bienvenido, <strong>{user?.name}</strong> 👋
-        {cargando && <span className="ms-2 spinner-border spinner-border-sm" role="status"></span>}
+        {cargando && (
+          <span
+            className="ms-2 spinner-border spinner-border-sm"
+            role="status"
+          ></span>
+        )}
       </p>
 
       {/* 🔹 Formulario para agregar pedido */}
-      <form onSubmit={agregarPedido} className="mb-4 p-3 border rounded bg-light">
+      <form
+        onSubmit={agregarPedido}
+        className="mb-4 p-3 border rounded bg-light"
+      >
         <h5>Agregar Nuevo Pedido</h5>
         <div className="row g-2 mb-2">
           <div className="col-md-3">
@@ -285,7 +313,9 @@ export default function AdminPage() {
             <select
               className="form-select"
               value={nuevo.metodoPago}
-              onChange={(e) => setNuevo({ ...nuevo, metodoPago: e.target.value })}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, metodoPago: e.target.value })
+              }
               disabled={cargando}
             >
               <option value="efectivo">Efectivo</option>
@@ -299,7 +329,9 @@ export default function AdminPage() {
               className="form-control"
               placeholder="Total"
               value={nuevo.total}
-              onChange={(e) => setNuevo({ ...nuevo, total: parseFloat(e.target.value) || 0 })}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, total: parseFloat(e.target.value) || 0 })
+              }
               step="0.01"
               min="0"
               disabled={cargando}
@@ -343,18 +375,20 @@ export default function AdminPage() {
               className="form-control"
               placeholder="Municipio"
               value={nuevo.municipio}
-              onChange={(e) => setNuevo({ ...nuevo, municipio: e.target.value })}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, municipio: e.target.value })
+              }
               disabled={cargando}
             />
           </div>
         </div>
-        
+
         {/* 🔹 PRODUCTOS CON KEY ÚNICA */}
         <div className="mb-2">
           <div className="d-flex justify-content-between align-items-center">
             <h6>Productos:</h6>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn btn-sm btn-outline-primary"
               onClick={agregarProducto}
               disabled={cargando}
@@ -363,8 +397,13 @@ export default function AdminPage() {
             </button>
           </div>
           {nuevo.productos.map((prod, index) => (
-            <div key={prod.id || index} className="d-flex align-items-center gap-2 mb-1">
-              <span>{prod.productName} - {prod.size} - ${prod.price}</span>
+            <div
+              key={prod.id || index}
+              className="d-flex align-items-center gap-2 mb-1"
+            >
+              <span>
+                {prod.productName} - {prod.size} - ${prod.price}
+              </span>
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"
@@ -379,8 +418,8 @@ export default function AdminPage() {
 
         <div className="row g-2">
           <div className="col-md-12">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-success w-100"
               disabled={cargando || !nuevo.name.trim()}
             >
@@ -409,7 +448,7 @@ export default function AdminPage() {
             {pedidos.map((p) => (
               <tr key={p._id}>
                 <td className="small">{p._id?.substring(0, 8)}...</td>
-                
+
                 {/* Nombre */}
                 <td>
                   {editando === p._id ? (
@@ -417,14 +456,16 @@ export default function AdminPage() {
                       type="text"
                       className="form-control form-control-sm"
                       value={pedidoEditado.name || ""}
-                      onChange={(e) => actualizarCampoEditado("name", e.target.value)}
+                      onChange={(e) =>
+                        actualizarCampoEditado("name", e.target.value)
+                      }
                       disabled={cargando}
                     />
                   ) : (
                     <strong>{p.name}</strong>
                   )}
                 </td>
-                
+
                 {/* Teléfono */}
                 <td>
                   {editando === p._id ? (
@@ -432,14 +473,16 @@ export default function AdminPage() {
                       type="text"
                       className="form-control form-control-sm"
                       value={pedidoEditado.phone || ""}
-                      onChange={(e) => actualizarCampoEditado("phone", e.target.value)}
+                      onChange={(e) =>
+                        actualizarCampoEditado("phone", e.target.value)
+                      }
                       disabled={cargando}
                     />
                   ) : (
                     p.phone || "N/A"
                   )}
                 </td>
-                
+
                 {/* Dirección */}
                 <td>
                   {editando === p._id ? (
@@ -449,7 +492,9 @@ export default function AdminPage() {
                         className="form-control form-control-sm mb-1"
                         placeholder="Calle"
                         value={pedidoEditado.calle || ""}
-                        onChange={(e) => actualizarCampoEditado("calle", e.target.value)}
+                        onChange={(e) =>
+                          actualizarCampoEditado("calle", e.target.value)
+                        }
                         disabled={cargando}
                       />
                       <input
@@ -457,7 +502,9 @@ export default function AdminPage() {
                         className="form-control form-control-sm mb-1"
                         placeholder="Colonia"
                         value={pedidoEditado.colonia || ""}
-                        onChange={(e) => actualizarCampoEditado("colonia", e.target.value)}
+                        onChange={(e) =>
+                          actualizarCampoEditado("colonia", e.target.value)
+                        }
                         disabled={cargando}
                       />
                       <input
@@ -465,7 +512,9 @@ export default function AdminPage() {
                         className="form-control form-control-sm mb-1"
                         placeholder="CP"
                         value={pedidoEditado.zipCode || ""}
-                        onChange={(e) => actualizarCampoEditado("zipCode", e.target.value)}
+                        onChange={(e) =>
+                          actualizarCampoEditado("zipCode", e.target.value)
+                        }
                         disabled={cargando}
                       />
                       <input
@@ -473,27 +522,39 @@ export default function AdminPage() {
                         className="form-control form-control-sm"
                         placeholder="Municipio"
                         value={pedidoEditado.municipio || ""}
-                        onChange={(e) => actualizarCampoEditado("municipio", e.target.value)}
+                        onChange={(e) =>
+                          actualizarCampoEditado("municipio", e.target.value)
+                        }
                         disabled={cargando}
                       />
                     </div>
                   ) : (
                     <div className="small">
-                      <div><strong>Calle:</strong> {p.calle || "N/A"}</div>
-                      <div><strong>Colonia:</strong> {p.colonia || "N/A"}</div>
-                      <div><strong>CP:</strong> {p.zipCode || "N/A"}</div>
-                      <div><strong>Municipio:</strong> {p.municipio || "N/A"}</div>
+                      <div>
+                        <strong>Calle:</strong> {p.calle || "N/A"}
+                      </div>
+                      <div>
+                        <strong>Colonia:</strong> {p.colonia || "N/A"}
+                      </div>
+                      <div>
+                        <strong>CP:</strong> {p.zipCode || "N/A"}
+                      </div>
+                      <div>
+                        <strong>Municipio:</strong> {p.municipio || "N/A"}
+                      </div>
                     </div>
                   )}
                 </td>
-                
+
                 {/* Método de Pago */}
                 <td>
                   {editando === p._id ? (
                     <select
                       className="form-select form-select-sm"
                       value={pedidoEditado.metodoPago || "efectivo"}
-                      onChange={(e) => actualizarCampoEditado("metodoPago", e.target.value)}
+                      onChange={(e) =>
+                        actualizarCampoEditado("metodoPago", e.target.value)
+                      }
                       disabled={cargando}
                     >
                       <option value="efectivo">Efectivo</option>
@@ -501,15 +562,20 @@ export default function AdminPage() {
                       <option value="transferencia">Transferencia</option>
                     </select>
                   ) : (
-                    <span className={`badge ${
-                      p.metodoPago === "efectivo" ? "bg-success" : 
-                      p.metodoPago === "tarjeta" ? "bg-primary" : "bg-warning"
-                    }`}>
+                    <span
+                      className={`badge ${
+                        p.metodoPago === "efectivo"
+                          ? "bg-success"
+                          : p.metodoPago === "tarjeta"
+                          ? "bg-primary"
+                          : "bg-warning"
+                      }`}
+                    >
                       {p.metodoPago}
                     </span>
                   )}
                 </td>
-                
+
                 {/* 🔹 PRODUCTOS CON KEY ÚNICA */}
                 <td>
                   <ul className="mb-0 small">
@@ -519,10 +585,11 @@ export default function AdminPage() {
                         {prod.quantity} × ${prod.price}
                       </li>
                     ))}
-                    {(!p.productos || p.productos.length === 0) && "No hay productos"}
+                    {(!p.productos || p.productos.length === 0) &&
+                      "No hay productos"}
                   </ul>
                 </td>
-                
+
                 {/* Total */}
                 <td>
                   {editando === p._id ? (
@@ -530,7 +597,12 @@ export default function AdminPage() {
                       type="number"
                       className="form-control form-control-sm"
                       value={pedidoEditado.total || 0}
-                      onChange={(e) => actualizarCampoEditado("total", parseFloat(e.target.value) || 0)}
+                      onChange={(e) =>
+                        actualizarCampoEditado(
+                          "total",
+                          parseFloat(e.target.value) || 0
+                        )
+                      }
                       step="0.01"
                       min="0"
                       disabled={cargando}
@@ -539,7 +611,7 @@ export default function AdminPage() {
                     `$${(p.total || 0).toFixed(2)}`
                   )}
                 </td>
-                
+
                 {/* Acciones */}
                 <td>
                   {editando === p._id ? (
